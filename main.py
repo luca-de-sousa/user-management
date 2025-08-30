@@ -86,6 +86,7 @@ def delete_user():
     
     print("\nUsers:")
     
+    # display the users in the database
     for row in result:
         print(f"ID: {row[0]}, username: {row[1]}")
     
@@ -93,7 +94,7 @@ def delete_user():
     
     user_id = 0
     
-    while user_id != -1:
+    while user_id != -1: # -1 is used to cancel the operation.
         user_found = False
         
         conn = sqlite3.connect("user_db")
@@ -130,14 +131,12 @@ def delete_user():
             
         else:
             print("\nUser not found.\n")
-            
-            user_id = -1
-            break
+
         
         conn.close()
 
 while choice != 4:
-    if not login:
+    if not login: # if the user hasn't logged in
         choice = int(input("Select an option.\n1. Sign in\n2. Sign up\n3. Quit\n"))
         
         match(choice):
