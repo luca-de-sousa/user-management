@@ -29,13 +29,14 @@ def sign_in():
         for row in result:
             if row[2] == password and row[3] == email:
                 username = row[1]
+                user_id = row[0]
                 login.append(username)
                 login.append(email)
-            
-            else:
-                print("\nUser not found. Please try again.\n")
-            
-            break
+                login.append(user_id)
+                break
+        if not login:
+            print("\nUser not found. Please try again.\n")
+
     conn.close()
 
 def add_user():
@@ -135,7 +136,21 @@ def delete_user():
         
         conn.close()
 
-while choice != 4:
+def view_profile():
+    conn = sqlite3.connect("user_db")
+    cur = conn.cursor()
+    
+    cur.execute(f"SELECT user_id, username, email FROM user WHERE user_id = {login[2]}")
+    result = cur.fetchall()
+    
+    print("\nProfile:")
+    print(f"ID: {result[0][0]}")
+    print(f"Username: {result[0][1]}")
+    print(f"E-mail: {result[0][2]}\n")
+    
+    conn.close()
+
+while choice != 5:
     if not login: # if the user hasn't logged in
         choice = int(input("Select an option.\n1. Sign in\n2. Sign up\n3. Quit\n"))
         
@@ -150,7 +165,7 @@ while choice != 4:
                 print("\nQuitting..")
         
     else:
-        choice = int(input(f"Hello, {login[0]}.\nSelect an option.\n1. Add user\n2. View all users\n3. Delete user\n4. Quit\n"))
+        choice = int(input(f"Hello, {login[0]}.\nSelect an option.\n1. Add user\n2. View all users\n3. Delete user\n4. View profile\n5. Quit\n"))
         
         match(choice):
             case 1:
@@ -163,6 +178,9 @@ while choice != 4:
                 delete_user()
             
             case 4:
+                view_profile()
+            
+            case 5:
                 print("\nQuitting...")
             
             case _:
